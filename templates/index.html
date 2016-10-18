@@ -19,6 +19,12 @@
 
 {% raw %}
 <div class="col-md-8 col-md-offset-2" ng-app="myApp" ng-controller="planetController">
+  <ol class="breadcrumb">
+      <li><a href="#">Home</a></li>
+      <li><a href="#">Library</a></li>
+      <li class="active">Data</li>
+  </ol>
+
     <ul class="list-group">
         <li class="list-group-item" ng-repeat="x in posts">
             <div class="row">

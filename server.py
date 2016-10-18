@@ -35,11 +35,9 @@ def board(board):
 
 @app.route('/api/<board>/')
 def api_board(board):
-    print('api_board')
     articles = parse_board(board)
 
     js = json.dumps(articles, ensure_ascii=False)
-
     resp = Response(js, status=200, content_type='application/json; charset=utf-8')
     return resp
 
@@ -51,13 +49,20 @@ def post(board, post):
 
 @app.route('/api/<board>/<post>/')
 def api_post(board, post):
-    print('api_post')
-    article = parse_post(board, post)
+    if 'index' in post:
+        articles = parse_board(board, post)
 
-    js = json.dumps(article, ensure_ascii=False)
-    print(js)
-    resp = Response(js, status=200, content_type='application/json; charset=utf-8')
-    return resp
+        js = json.dumps(articles, ensure_ascii=False)
+
+        resp = Response(js, status=200, content_type='application/json; charset=utf-8')
+        return resp
+
+    else:
+        article = parse_post(board, post)
+
+        js = json.dumps(article, ensure_ascii=False)
+        resp = Response(js, status=200, content_type='application/json; charset=utf-8')
+        return resp
 
 if __name__ == '__main__':
     app.run(debug=True)

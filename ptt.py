@@ -1,6 +1,7 @@
 import requests
 from collections import OrderedDict
 from bs4 import BeautifulSoup, NavigableString
+import re
 DEBUG = True
 
 
@@ -17,6 +18,8 @@ def parse_post(board, post):
 
     post = OrderedDict()
     text = []
+    print(addr)
+
     for item in div.contents:
         if isinstance(item, NavigableString):
             push = OrderedDict({'text': item})
@@ -33,15 +36,20 @@ def parse_post(board, post):
 
         elif item.name == 'a':
             img_text = item.get_text()
+
+            # imgur url replaction
+            # http://imgur.com/R2sLGim
+            m = re.search('http:\/\/imgur.com\/(?P<id>.*})', img_text)
+            print(m)
+
             html = ''
-            html += "<a href='" + item.get_text() + "'>"
+            html += "<a href='" + img_text + "'>"
+            html += img_text
+            html += "</a>"
+            print(html)
             if 'imgur' in img_text and 'jpg' in img_text:
                 html += "<img src='" + item.get_text() + "' title='" + item.get_text() + \
                         "' class='img-rounded img-responsive'>"
-                img_text = ''
-
-            html += img_text
-            html += "</a>"
 
             push = OrderedDict({'text': html})
             text.append(push)
@@ -73,8 +81,8 @@ def parse_post(board, post):
     return post
 
 
-def parse_board(board):
-    addr = 'https://www.ptt.cc/bbs/' + board +'/index.html'
+def parse_board(board, post='index.html'):
+    addr = 'https://www.ptt.cc/bbs/' + board + '/' + post
     r = requests.get(addr)
     soup = BeautifulSoup(r.text, "html.parser")
     div = soup.find('div', {"class": "r-list-container bbs-screen"})
@@ -114,9 +122,12 @@ def parse_board(board):
         articles.insert(0, article)
 
     up = soup.find('div', {"class": "btn-group btn-group-paging"}).find_all('a')[1]['href']
-    print(up)
+    up = up.split('/')[-1]
 
-    return articles
+    post = OrderedDict()
+    post.update({'text': articles})
+    post.update({'up': up})
+    return post
 
 
 def parse_hotboard():
@@ -152,8 +163,8 @@ if __name__ == '__main__':
     # LoL/M.1476714039.A.4CE.html
     # bbs/NBA/M.1476719760.A.438.html
     # Beauty/M.1476746586.A.D5C.html
-    # r = parse_post('Beauty', 'M.1476746586.A.D5C.html')
-    r = parse_board('Beauty')
+    r = parse_post('Beauty', 'M.1476512252.A.F8E.html')
+    # r = parse_board('Beauty')
 
     for item in r:
         print(item)
