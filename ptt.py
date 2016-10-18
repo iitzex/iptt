@@ -18,7 +18,7 @@ def parse_post(board, post):
 
     post = OrderedDict()
     text = []
-    print(addr)
+    # print(addr)
 
     for item in div.contents:
         if isinstance(item, NavigableString):
@@ -35,20 +35,19 @@ def parse_post(board, post):
             text.append(push)
 
         elif item.name == 'a':
-            img_text = item.get_text()
+            img = item.get_text()
+            href = img
 
-            # imgur url replaction
-            # http://imgur.com/R2sLGim
-            m = re.search('http:\/\/imgur.com\/(?P<id>.*})', img_text)
-            print(m)
+            # imgur url replaction,  http://imgur.com/R2sLGim
+            m = re.search('http://imgur.com/(\w+)', img)
+            if m:
+                href = 'http://i.imgur.com/' + m.group(1) + '.jpg'
 
-            html = ''
-            html += "<a href='" + img_text + "'>"
-            html += img_text
+            html = "<a href='" + href + "'>"
+            html += img
             html += "</a>"
-            print(html)
-            if 'imgur' in img_text and 'jpg' in img_text:
-                html += "<img src='" + item.get_text() + "' title='" + item.get_text() + \
+            if 'imgur' in href and 'jpg' in href:
+                html += "<img src='" + href + "' title='" + href + \
                         "' class='img-rounded img-responsive'>"
 
             push = OrderedDict({'text': html})
@@ -67,6 +66,12 @@ def parse_post(board, post):
             push_userid = item.find('span', {"class": "push-userid"}).get_text()
             push_content = item.find('span', {"class": "push-content"}).get_text()
             push_time = item.find('span', {"class": "push-ipdatetime"}).get_text()
+
+            m = re.search('http://imgur.com/(\w+)', push_content)
+            if m:
+                href = 'http://i.imgur.com/' + m.group(1) + '.jpg'
+                html = "<img src='" + href + "' title='" + href + "' class='img-rounded img-responsive'>"
+                push_content += html
 
             push = OrderedDict()
             push.update({'tag': push_tag})
@@ -163,11 +168,11 @@ if __name__ == '__main__':
     # LoL/M.1476714039.A.4CE.html
     # bbs/NBA/M.1476719760.A.438.html
     # Beauty/M.1476746586.A.D5C.html
-    r = parse_post('Beauty', 'M.1476512252.A.F8E.html')
+    r = parse_post('Beauty', 'M.1476717114.A.BBD.html')
     # r = parse_board('Beauty')
 
-    for item in r:
-        print(item)
+    # for item in r:
+    #     print(item)
 
 
 
