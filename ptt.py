@@ -2,6 +2,7 @@ import requests
 from collections import OrderedDict
 from bs4 import BeautifulSoup, NavigableString
 import re
+from imgur import parse_album
 DEBUG = True
 
 
@@ -67,17 +68,27 @@ def parse_post(board, post):
             push_content = item.find('span', {"class": "push-content"}).get_text()
             push_time = item.find('span', {"class": "push-ipdatetime"}).get_text()
 
-            m = re.search('(.*)(http.*://.*) +(.*)', push_content)
+            m = re.search('http://.*imgur.com/(\w+)(\.jpg)*(.*)', push_content)
             if m:
-                push_content = m.group(1)
-                push_content += "<a href= '" + m.group(2) + "'>" + m.group(2) + "</a>"
-                push_content += m.group(3)
+                if m.group(1) == 'a':
+                    href = parse_album(m.group(3)[1:6])
 
-            m = re.search('http://imgur.com/(\w+)', push_content)
-            if m:
-                href = 'http://i.imgur.com/' + m.group(1) + '.jpg'
-                html = "<img src='" + href + "' title='" + href + "' class='img-rounded img-responsive'>"
-                push_content += html
+                    html = "<div class='row'><div class='thumbnail col-xs-6 col-xs-offset-1'>"
+                    html += "<img src='" + href + "' title='" + href + "' class='img-rounded img-responsive'>"
+                    html += "</div></div>"
+                    push_content += html
+                else:
+                    href = 'http://i.imgur.com/' + m.group(1) + '.jpg'
+                    html = "<div class='row'><div class='thumbnail col-xs-6 col-xs-offset-1'>"
+                    html += "<img src='" + href + "' title='" + href + "' class='img-rounded img-responsive'>"
+                    html += "</div></div>"
+                    push_content += html
+            else:
+                m = re.search('(.*)(http.*://.*)( *.*)', push_content)
+                if m:
+                    push_content = m.group(1)
+                    push_content += "<a href= '" + m.group(2) + "'>" + m.group(2) + "</a>"
+                    push_content += m.group(3)
 
             push = OrderedDict()
             push.update({'tag': push_tag})
@@ -180,7 +191,7 @@ def parse_hotboard():
 if __name__ == '__main__':
     # parse_board(addr)
     # Beauty/M.1476746586.A.D5C.html
-    r = parse_post('Beauty', 'M.1475150166.A.0C7.html')
+    r = parse_post('Beauty', 'M.1475937374.A.264.html')
 
 
 
