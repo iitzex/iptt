@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="myApp" ng-controller="planetController">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -18,7 +18,7 @@
 {% include 'navbar.html' %}
 
 {% raw %}
-<div class="col-xs-8 col-md-8 col-xs-offset-2 col-md-offset-2" ng-app="myApp" ng-controller="planetController">
+<div class="col-xs-8 col-md-8 col-xs-offset-2 col-md-offset-2">
   <ol class="breadcrumb">
       <li><a href="/">熱門看板</a></li>
       <li></li>
@@ -30,13 +30,13 @@
     <ul class="list-group">
         <li class="list-group-item" ng-repeat="x in posts">
             <div class="row">
-                <div class="col-md-2">
+                <div class="col-xs-2">
                     <span class="badge badge-danger">{{x.nrec}}</span>
                 </div>
-                <div class="col-md-3">
+                <div class="col-xs-3">
                     <span class="label label-success bold">{{x.name}}</span>
                 </div>
-                <div class="col-md-7">
+                <div class="col-xs-7 col-md-7">
                     <a href="{{x.href}}"> {{ x.title }} </a>
                 </div>
             </div>

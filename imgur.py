@@ -26,9 +26,11 @@ def image(content, cat='main'):
         else:
             href = 'http://i.imgur.com/' + m.group(1) + '.jpg'
         html = tag
-        html += "<a href= '" + href + "'>" + content
+        html += "<a href= '" + href + "'>"
+        html += content
+        html += "</a>"
         html += "<img src='" + href + "' title='" + href + "' class='img-rounded img-responsive'>"
-        html += endtag + "</a>"
+        html += endtag
 
         return html
     else:  # hyperlink

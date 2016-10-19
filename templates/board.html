@@ -11,7 +11,10 @@
     {% raw %}
     <title>{{board_name}} | iPtt</title>
     {% endraw %}
+
     {% include 'ref.html' %}
+      <script type="text/javascript" src="{{ url_for('static', filename='js/board.js') }}"></script>
+      <script type="text/javascript" src="{{ url_for('static', filename='js/ng-infinite-scroll.min.js') }}"></script>
   </head>
 
   <body >
@@ -20,11 +23,6 @@
 
     {% raw %}
       <div class="col-xs-8 col-md-8 col-xs-offset-2 col-md-offset-2">
-          <ol class="breadcrumb">
-              <li><a href="/">Home</a></li>
-              <li><a href="#">{{board_name}}</a></li>
-              <!--<li class="active">Data</li>-->
-          </ol>
 
         <ul class="list-group" infinite-scroll='loadMore()' infinite-scroll-disabled='busy' infinite-scroll-distance='1'>
             <li class="list-group-item" ng-repeat="x in posts">
