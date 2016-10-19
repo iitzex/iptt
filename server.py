@@ -6,14 +6,14 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    boards = parse_hotboard()
-    print(boards)
-    return render_template('index.html')
+    content = {'home': 'active'}
+    return render_template('index.html', content=content)
 
 
 @app.route('/about')
 def about():
-    return render_template('about.html')
+    content = {'about': 'active'}
+    return render_template('about.html', content=content)
 
 
 @app.route('/api/hotboard/')
