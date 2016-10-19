@@ -8,7 +8,6 @@ app = Flask(__name__)
 def index():
     boards = parse_hotboard()
     print(boards)
-    context = {'title': 'hotboard'}
     return render_template('index.html')
 
 
@@ -17,13 +16,13 @@ def about():
     return render_template('about.html')
 
 
+@app.route('/api/hotboard/')
 @app.route('/api/hotboard')
 def api_hotboard():
     boards = parse_hotboard()
     print(boards)
 
     js = json.dumps(boards, ensure_ascii=False)
-
     resp = Response(js, status=200, content_type='application/json; charset=utf-8')
     return resp
 
@@ -66,10 +65,11 @@ def api_post(board, post):
         return resp
 
 if __name__ == '__main__':
-    # app.run(debug=True)
-    # app.run()
+    if os.environ.get('PORT') is None:
+        debug = True
+
     port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port)
+    app.run(host='0.0.0.0', port=port, debug=debug)
 
 
 

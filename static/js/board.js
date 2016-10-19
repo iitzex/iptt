@@ -11,7 +11,7 @@
             if ($scope.busy) return;
             $scope.busy = true;
 
-            var url = "http://127.0.0.1:5000/api/" + path[2] + '/' + $scope.up
+            var url = "/api/" + path[2] + '/' + $scope.up
             $log.log(url)
             $http.get(url)
                 .success(function(response) {

@@ -12,7 +12,8 @@ def pprint(*args, **kwargs):
 
 def parse_post(board, post):
     addr = 'https://www.ptt.cc/bbs/' + board + '/' + post
-    r = requests.get(addr)
+    cookies = dict(yes='yes')
+    r = requests.get(addr, cookies=cookies)
     soup = BeautifulSoup(r.text, "html.parser")
     div = soup.find('div', id="main-content")
 
@@ -88,7 +89,9 @@ def parse_post(board, post):
 
 def parse_board(board, post='index.html'):
     addr = 'https://www.ptt.cc/bbs/' + board + '/' + post
-    r = requests.get(addr)
+    cookies = dict(yes='yes')
+    r = requests.get(addr, cookies=cookies)
+    print(r.text)
     soup = BeautifulSoup(r.text, "html.parser")
     div = soup.find('div', {"class": "r-list-container bbs-screen"})
 
@@ -137,10 +140,18 @@ def parse_board(board, post='index.html'):
 
 def parse_hotboard():
     addr = 'https://www.ptt.cc/hotboard.html'
-    r = requests.get(addr)
+    cookies = dict(yes='yes')
+    r = requests.get(addr, cookies=cookies)
+    print(r.text)
     content = r.content.decode('Big5-HKSCS', errors='backslashreplace')
 
     soup = BeautifulSoup(content, "html.parser")
+
+    over18 = soup.find('div', {"class": "over18-notice"})
+    if over18 is not None:
+        print('over18')
+        return None
+
     hotboard = soup.find_all('dd')
 
     nrec = 0

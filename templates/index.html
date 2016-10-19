@@ -30,14 +30,14 @@
     <ul class="list-group">
         <li class="list-group-item" ng-repeat="x in posts">
             <div class="row">
+                <div class="col-md-2">
+                    <span class="badge badge-danger">{{x.nrec}}</span>
+                </div>
                 <div class="col-md-3">
                     <span class="label label-success bold">{{x.name}}</span>
                 </div>
-                <div class="col-md-8">
+                <div class="col-md-7">
                     <a href="{{x.href}}"> {{ x.title }} </a>
-                </div>
-                <div class="col-md-1 pull-right">
-                    <span class="badge badge-danger">{{x.nrec}}</span>
                 </div>
             </div>
         </li>
@@ -49,7 +49,7 @@
 <script>
     var app = angular.module('myApp', []);
     app.controller('planetController', function($scope, $http, $log) {
-        $http.get("http://127.0.0.1:5000/api/hotboard")
+        $http.get("/api/hotboard/")
                 .success(function(response) {
                     $scope.posts = response;}
                 );
