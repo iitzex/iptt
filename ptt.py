@@ -1,8 +1,7 @@
 import requests
 from collections import OrderedDict
 from bs4 import BeautifulSoup, NavigableString
-import re
-from imgur import parse_album
+from imgur import image
 DEBUG = True
 
 
@@ -37,19 +36,19 @@ def parse_post(board, post):
 
         elif item.name == 'a':
             img = item.get_text()
-            href = img
+            html = image(img)
 
-            # imgur url replaction,  http://imgur.com/R2sLGim
-            m = re.search('http://imgur.com/(\w+)', img)
-            if m:
-                href = 'http://i.imgur.com/' + m.group(1) + '.jpg'
-
-            html = "<a href='" + href + "'>"
-            html += img
-            html += "</a>"
-            if 'imgur' in href and 'jpg' in href:
-                html += "<img src='" + href + "' title='" + href + \
-                        "' class='img-rounded img-responsive'>"
+            # # imgur url replaction,  http://imgur.com/R2sLGim
+            # m = re.search('http://imgur.com/(\w+)', img)
+            # if m:
+            #     href = 'http://i.imgur.com/' + m.group(1) + '.jpg'
+            #
+            # html = "<a href='" + href + "'>"
+            # html += img
+            # html += "</a>"
+            # if 'imgur' in href and 'jpg' in href:
+            #     html += "<img src='" + href + "' title='" + href + \
+            #             "' class='img-rounded img-responsive'>"
 
             push = OrderedDict({'text': html})
             text.append(push)
@@ -68,27 +67,7 @@ def parse_post(board, post):
             push_content = item.find('span', {"class": "push-content"}).get_text()
             push_time = item.find('span', {"class": "push-ipdatetime"}).get_text()
 
-            m = re.search('http://.*imgur.com/(\w+)(\.jpg)*(.*)', push_content)
-            if m:
-                if m.group(1) == 'a':
-                    href = parse_album(m.group(3)[1:6])
-
-                    html = "<div class='row'><div class='thumbnail col-xs-6 col-xs-offset-1'>"
-                    html += "<img src='" + href + "' title='" + href + "' class='img-rounded img-responsive'>"
-                    html += "</div></div>"
-                    push_content += html
-                else:
-                    href = 'http://i.imgur.com/' + m.group(1) + '.jpg'
-                    html = "<div class='row'><div class='thumbnail col-xs-6 col-xs-offset-1'>"
-                    html += "<img src='" + href + "' title='" + href + "' class='img-rounded img-responsive'>"
-                    html += "</div></div>"
-                    push_content += html
-            else:
-                m = re.search('(.*)(http.*://.*)( *.*)', push_content)
-                if m:
-                    push_content = m.group(1)
-                    push_content += "<a href= '" + m.group(2) + "'>" + m.group(2) + "</a>"
-                    push_content += m.group(3)
+            push_content = image(push_content, 'thumb')
 
             push = OrderedDict()
             push.update({'tag': push_tag})
@@ -191,13 +170,5 @@ def parse_hotboard():
 if __name__ == '__main__':
     # parse_board(addr)
     # Beauty/M.1476746586.A.D5C.html
-    r = parse_post('Beauty', 'M.1475937374.A.264.html')
-
-
-
-
-
-
-
-
+    r = parse_post('Beauty', 'M.1475339761.A.46F.html')
 
