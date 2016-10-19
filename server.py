@@ -29,7 +29,7 @@ def api_hotboard():
 @app.route('/bbs/<board>/index.html')
 @app.route('/bbs/<board>/')
 def board(board):
-    content = {'home': 'active'}
+    content = {board: 'active'}
     return render_template('board.html', content=content)
 
 
@@ -44,7 +44,8 @@ def api_board(board):
 
 @app.route('/bbs/<board>/<post>')
 def post(board, post):
-    return render_template('post.html')
+    content = {board: 'active', post: 'active'}
+    return render_template('post.html', content=content)
 
 
 @app.route('/api/<board>/<post>/')
