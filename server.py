@@ -1,5 +1,6 @@
 from flask import Flask, json, Response, render_template
 from ptt import parse_board, parse_post, parse_hotboard
+import os
 app = Flask(__name__)
 
 
@@ -65,8 +66,10 @@ def api_post(board, post):
         return resp
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # app.run(debug=True)
     # app.run()
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)
 
 
 
