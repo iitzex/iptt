@@ -67,6 +67,12 @@ def parse_post(board, post):
             push_content = item.find('span', {"class": "push-content"}).get_text()
             push_time = item.find('span', {"class": "push-ipdatetime"}).get_text()
 
+            m = re.search('(.*)(http.*://.*) +(.*)', push_content)
+            if m:
+                push_content = m.group(1)
+                push_content += "<a href= '" + m.group(2) + "'>" + m.group(2) + "</a>"
+                push_content += m.group(3)
+
             m = re.search('http://imgur.com/(\w+)', push_content)
             if m:
                 href = 'http://i.imgur.com/' + m.group(1) + '.jpg'
@@ -173,14 +179,9 @@ def parse_hotboard():
 
 if __name__ == '__main__':
     # parse_board(addr)
-    # LoL/M.1476714039.A.4CE.html
-    # bbs/NBA/M.1476719760.A.438.html
     # Beauty/M.1476746586.A.D5C.html
-    r = parse_post('Beauty', 'M.1476717114.A.BBD.html')
-    # r = parse_board('Beauty')
+    r = parse_post('Beauty', 'M.1475150166.A.0C7.html')
 
-    # for item in r:
-    #     print(item)
 
 
 

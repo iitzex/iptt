@@ -19,7 +19,6 @@ def about():
 @app.route('/api/hotboard/')
 def api_hotboard():
     boards = parse_hotboard()
-    print(boards)
 
     js = json.dumps(boards, ensure_ascii=False)
     resp = Response(js, status=200, content_type='application/json; charset=utf-8')
@@ -54,7 +53,6 @@ def api_post(board, post):
         articles = parse_board(board, post)
 
         js = json.dumps(articles, ensure_ascii=False)
-
         resp = Response(js, status=200, content_type='application/json; charset=utf-8')
         return resp
 
