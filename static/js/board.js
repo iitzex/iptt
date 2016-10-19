@@ -16,6 +16,7 @@
             $http.get(url)
                 .success(function(response) {
                     for(let i of response['text']){
+                        $log.log(i)
                         $scope.posts.push(i);
                     };
     //              $scope.posts = response['text'];

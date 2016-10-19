@@ -19,7 +19,6 @@ def parse_post(board, post):
 
     post = OrderedDict()
     text = []
-    # print(addr)
 
     for item in div.contents:
         if isinstance(item, NavigableString):
@@ -91,7 +90,6 @@ def parse_board(board, post='index.html'):
     addr = 'https://www.ptt.cc/bbs/' + board + '/' + post
     cookies = dict(yes='yes')
     r = requests.get(addr, cookies=cookies)
-    print(r.text)
     soup = BeautifulSoup(r.text, "html.parser")
     div = soup.find('div', {"class": "r-list-container bbs-screen"})
 
@@ -142,7 +140,6 @@ def parse_hotboard():
     addr = 'https://www.ptt.cc/hotboard.html'
     cookies = dict(yes='yes')
     r = requests.get(addr, cookies=cookies)
-    print(r.text)
     content = r.content.decode('Big5-HKSCS', errors='backslashreplace')
 
     soup = BeautifulSoup(content, "html.parser")
