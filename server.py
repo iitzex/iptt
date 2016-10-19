@@ -65,6 +65,7 @@ def api_post(board, post):
         return resp
 
 if __name__ == '__main__':
+    debug = False
     if os.environ.get('PORT') is None:
         debug = True
 
