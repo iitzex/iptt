@@ -17,7 +17,6 @@ def about():
 
 
 @app.route('/api/hotboard/')
-@app.route('/api/hotboard')
 def api_hotboard():
     boards = parse_hotboard()
     print(boards)
@@ -30,7 +29,8 @@ def api_hotboard():
 @app.route('/bbs/<board>/index.html')
 @app.route('/bbs/<board>/')
 def board(board):
-    return render_template('board.html')
+    content = {'home': 'active'}
+    return render_template('board.html', content=content)
 
 
 @app.route('/api/<board>/')
