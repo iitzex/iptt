@@ -76,8 +76,11 @@ def parse_post(board, post):
             push.update({'time': push_time})
 
             text.append(push)
+        # else:
+        #     print(item)
 
     post.update({'text': text})
+    print(post)
 
     return post
 
@@ -87,7 +90,6 @@ def parse_board(board, post='index.html'):
     cookies = dict(yes='yes')
     r = requests.get(addr, cookies=cookies)
     soup = BeautifulSoup(r.text, "html.parser")
-    div = soup.find('div', {"class": "r-list-container bbs-screen"})
 
     over18 = soup.find('div', {"class": "over18-notice"})
     if over18 is not None:
@@ -96,8 +98,9 @@ def parse_board(board, post='index.html'):
         requests.post(addr, data=formdata)
         return None
 
+    div = soup.find_all('div', {"class": "r-ent"})
     articles = []
-    for item in div.contents:
+    for item in div:
         if item == '\n':
             continue
         if item['class'] == ['r-list-sep']:
@@ -129,6 +132,7 @@ def parse_board(board, post='index.html'):
     post = OrderedDict()
     post.update({'text': articles})
     post.update({'up': up})
+    
     return post
 
 
@@ -136,16 +140,15 @@ def parse_hotboard():
     addr = 'https://www.ptt.cc/hotboard.html'
     cookies = dict(yes='yes')
     r = requests.get(addr, cookies=cookies)
-    content = r.content.decode('Big5-HKSCS', errors='backslashreplace')
 
-    soup = BeautifulSoup(content, "html.parser")
+    soup = BeautifulSoup(r.text, "html.parser")
 
     over18 = soup.find('div', {"class": "over18-notice"})
     if over18 is not None:
         print('over18')
         return None
 
-    hotboard = soup.find_all('dd')
+    hotboard = soup.find_all('div', {"class": "b-ent"})
 
     nrec = 0
     name = ''
@@ -153,22 +156,18 @@ def parse_hotboard():
     boards = []
 
     for item in hotboard:
-        td = item.table.tr.find_all('td')
-        for i, col in enumerate(td):
-            if i == 0:
-                nrec = col.get_text()[3:]
-            elif i == 1:
-                name = col.get_text()
-                href = col.a['href']
-            elif i == 2:
-                title = col.get_text()
+        name = (item.find('div', {"class": "board-name"})).get_text()
+        nrec = (item.find('div', {"class": "board-nuser"})).get_text()
+        title = (item.find('div', {"class": "board-title"})).get_text()
+        href = item.a['href']
 
         boards.append({'nrec': nrec, 'name': name, 'title': title, 'href':href})
 
     return boards
 
 if __name__ == '__main__':
-    # parse_board(addr)
-    # Beauty/M.1476746586.A.D5C.html
-    r = parse_post('Beauty', 'M.1475339761.A.46F.html')
+    # r = parse_post('Beauty', 'M.1513651042.A.594.html')
+    # parse_hotboard()
+    parse_board('Beauty')
+
 
