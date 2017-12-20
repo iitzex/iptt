@@ -13,10 +13,13 @@
 
               var after_posts = [];
 
+              var comment = false
               for(let post of response['text']) {
                 var tag = post['tag'];
                 var txt = '';
                 if(tag){
+                  comment = true
+                  txt += "<span class='col-xs-2'>";
                   if(tag === '→ '){
                     txt += "<span class='label'>";
                   }else if(tag === '推 '){
@@ -25,13 +28,17 @@
                     txt += "<span class='label label-danger'>";
                   }
 
-                  txt += tag + post['user'] + "  </span>";
+                  txt += tag + post['user'] + "  </span></span>";
+                  txt += '<a>'
                   txt += String(post['text']).replace(/\n/g, "<br />");
+                  txt += '</a>'
                   txt += "<span class='pull-right'>" + post['time'] + "</span>";
-                }else {
-                  txt += "";
+                } else if(comment){
+                  txt += "<span class='col-xs-2'> </span> ";
                   txt += String(post['text']).replace(/\n/g, "<br />");
                   txt += "";
+                } else {
+                  txt += String(post['text']).replace(/\n/g, "<br />");
                 }
 
 

@@ -27,14 +27,14 @@
         <ul class="list-group" infinite-scroll='loadMore()' infinite-scroll-disabled='busy' infinite-scroll-distance='1'>
             <li class="list-group-item" ng-repeat="x in posts">
                 <div class="row">
-                    <div class="col-xs-2">
-                        <span class="badge badge-danger">{{x.nrec}}</span>
-                    </div>
                     <div class="col-xs-3">
                         <span class="label label-info bold">{{x.author}}</span>
                     </div>
                     <div class="col-xs-7 col-md-7">
                         <a href="{{x.href}}"> {{ x.title }} </a>
+                    </div>
+                    <div class="col-xs-2">
+                        <span class="badge badge-danger">{{x.nrec}}</span>
                     </div>
                 </div>
             </li>
